@@ -1,0 +1,37 @@
+# SKPods: Your data gets a home. Your AI gets a leash.
+
+> SKPods is open source Solid pod hosting with an AI guardian. Every person gets a pod (a WebID plus personal storage). Apps read and write it over plain Solid HTTP with Solid-OIDC and DPoP, with permission the person grants and can take back. A Rust consent broker (sk-consent) adds what Web Access Control lacks: time-limited grants, automatic and verified revoke, and a hash-chained audit log mirrored into the person's pod. Part of SKWorld. Apache-2.0.
+
+## What a pod is
+- A personal data store on the web that the person controls. Apps ask for access instead of keeping their own copy.
+- Solid was started by Sir Tim Berners-Lee. It uses open standards: Solid Protocol, Solid-OIDC, DPoP, WebID, Web Access Control (WAC), Type Indexes, Turtle and JSON-LD.
+
+## The Guardian (flagship demo)
+- A clinic asks for date of birth, allergies, medications, insurance member ID and SSN before a visit.
+- The guardian agent decides each item under a policy stored in the owner's pod: basic health data auto-approved for 72 hours (known provider with a booking), insurance member ID asks the owner with a recommendation, SSN denied with a counter offer.
+- Decisions come from deterministic rules. An optional LLM only rewords a decision that is already made.
+
+## Showcase apps (working against the dev server, fake data)
+- Guardian: AI agent with a leash (e2e 15/15)
+- Consent Center: every request, expiring grants, audit chain verify (e2e 7/7)
+- Receipts Wallet: append-only receipt inbox in your pod (e2e 6/6)
+- Pod Chat: messages live in each sender's pod (e2e 8/8)
+
+## Architecture
+- Apps: React + Vite static SPAs. Library: @skpods/solid-web (TypeScript). SDK stubs: Rust (sk-solid), .NET, plain HTTP.
+- Consent: sk-consent (Rust, axum, SQLite), policy at /skpods/v1/consents/policy.jsonld, SSE events.
+- Engine: Nextcloud with the Solid app today; a Rust engine is planned behind the same conformance gate (setting skpods.ENGINE).
+- Deploy: SKStacks Ansible role v1/ansible/optional/skpods (dev, staging, prod playbooks).
+- Vocabulary: https://w3id.org/skpods/v1# (prefix skp:).
+
+## Status
+- Working: pod hosting (dev), showcase apps, solid-web, consent broker demo.
+- Designed: open consent vocabulary publication, household pods, bridge containers, staff roles.
+- Planned: production pods, hosted SKPods service, Rust engine, office suite and AI memory stored in pods.
+
+## Links
+- Site: https://skpods.skworld.io/
+- Docs: https://skpods.skworld.io/docs.html
+- Code: https://github.com/smilinTux/skpods
+- Deploy role: https://github.com/smilinTux/skstacks/tree/main/v1/ansible/optional/skpods
+- SKWorld: https://skworld.io/

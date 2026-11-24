@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKPods: Your data gets a home. Your AI gets a leash.</title>
+<meta name="description" content="SKPods is Solid pod hosting that actually works: a personal data store you own, apps that ask before they read, and an AI guardian that grants, asks or refuses on your behalf, with every grant expiring on time and every decision on a tamper-evident audit chain. Open source, self-hostable, part of SKWorld.">
+<meta name="keywords" content="Solid pods, Solid protocol, personal data store, WebID, Solid-OIDC, DPoP, WAC, consent management, AI agent, AI guardian, data sovereignty, self-hosted, SKWorld, smilinTux">
+<link rel="canonical" href="https://skpods.skworld.io/">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://skpods.skworld.io/">
+<meta property="og:site_name" content="SKPods · SKWorld">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="SKPods: Your data gets a home. Your AI gets a leash.">
+<meta property="og:description" content="Solid pods you own, apps that ask first, and an AI guardian that grants, asks or refuses for you. Every grant expires on time. Every decision is on a tamper-evident chain.">
+<meta property="og:image" content="https://skpods.skworld.io/og.png">
+<meta property="og:image:secure_url" content="https://skpods.skworld.io/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SKPods: a personal data pod guarded by an AI agent with a leash">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@smilinTux">
+<meta name="twitter:creator" content="@smilinTux">
+<meta name="twitter:title" content="SKPods: Your data gets a home. Your AI gets a leash.">
+<meta name="twitter:description" content="Solid pods you own, apps that ask first, and an AI guardian that grants, asks or refuses for you. Open source, part of SKWorld.">
+<meta name="twitter:image" content="https://skpods.skworld.io/og.png">
+<meta name="twitter:image:alt" content="SKPods: a personal data pod guarded by an AI agent with a leash">
+
+<meta name="theme-color" content="#14171c">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%9B%A1%EF%B8%8F</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://skworld.io/#organization",
+      "name": "SKWorld",
+      "url": "https://skworld.io/",
+      "sameAs": ["https://github.com/smilinTux"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://skpods.skworld.io/#website",
+      "name": "SKPods",
+      "url": "https://skpods.skworld.io/",
+      "publisher": {"@id": "https://skworld.io/#organization"},
+      "isPartOf": {"@type": "WebSite", "name": "SKWorld", "url": "https://skworld.io/"}
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "SKPods",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux, Docker Swarm",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "codeRepository": "https://github.com/smilinTux/skpods",
+      "url": "https://skpods.skworld.io/",
+      "description": "Solid pod hosting with an AI guardian: personal data pods, time-limited consent over WAC, automatic revoke, and a hash-chained audit log.",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "publisher": {"@id": "https://skworld.io/#organization"}
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is a Solid pod?",
+         "acceptedAnswer": {"@type": "Answer", "text": "A pod is a personal data store on the web that you control. Apps do not keep their own copy of your data; they ask permission to read or write your pod, and you can take that permission back."}},
+        {"@type": "Question", "name": "Who created Solid?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Solid was started by Sir Tim Berners-Lee, the inventor of the World Wide Web, and is developed as open specifications in a W3C community."}},
+        {"@type": "Question", "name": "Is a pod a blockchain or a cloud drive?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Neither. A pod is a normal web server for your data that speaks open standards: Solid-OIDC for login, WebID for identity, and Web Access Control for permissions. Unlike a cloud drive, apps can read structured data from it with your permission."}},
+        {"@type": "Question", "name": "What does the SKPods guardian agent do?",
+         "acceptedAnswer": {"@type": "Answer", "text": "When a business asks for your data, the guardian decides each item under rules stored in your own pod: approve for a limited time, ask you, or refuse with an explanation and a counter offer. Grants expire on their own, revoke is verified, and every step goes on a tamper-evident audit chain. An optional language model can explain a decision, but never makes one."}},
+        {"@type": "Question", "name": "Can I run SKPods myself?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Yes. SKPods is open source (Apache-2.0) and deployed by an SKStacks Ansible role with one setting for the engine. A hosted service is planned."}}
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+:root{
+  --paper:#faf8f5; --surface:#ffffff; --ink:#14171c; --ink-2:#454e59; --muted:#6d7682;
+  --line:#e4e0da; --line-2:#efece7;
+  --accent:#d4541f; --accent-soft:#fdf0e9;
+  --teal:#12657f; --teal-soft:#e6f1f5;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --ask:#a86a00; --ask-soft:#fbf1dc; --no:#b4322b; --no-soft:#fbe8e6;
+  --hero-bg:#14171c; --hero-ink:#f6f3ee; --hero-muted:#9aa4b0;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(20,23,28,.05), 0 10px 30px rgba(20,23,28,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0f1318; --surface:#171c23; --ink:#eef2f6; --ink-2:#b9c4d0; --muted:#8a97a6;
+    --line:#252d37; --line-2:#1d242c;
+    --accent:#f0794a; --accent-soft:#2a1a12; --teal:#5fb6d1; --teal-soft:#12242b;
+    --ok:#4cc38a; --ok-soft:#10261b; --ask:#e5b04a; --ask-soft:#2a2110; --no:#f07368; --no-soft:#2c1513;
+    --hero-bg:#080b0e; --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.inner{max-width:72rem;margin:0 auto;padding:0 1.25rem}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3,h4{font-family:"Bricolage Grotesque","Public Sans",sans-serif;font-weight:800;line-height:1.08;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.9rem,4.2vw,2.9rem);letter-spacing:-.01em}
+h3{font-size:1.25rem}
+p{margin:.8rem 0}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;font-size:.88em}
+img,video{max-width:100%;display:block}
+
+/* hero */
+.hero{background:var(--hero-bg);color:var(--hero-ink);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:60rem;height:60rem;background:radial-gradient(closest-side,rgba(18,101,127,.45),transparent 70%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:auto auto -30% -15%;width:50rem;height:50rem;background:radial-gradient(closest-side,rgba(212,84,31,.28),transparent 70%);pointer-events:none}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 0;position:relative;z-index:2;flex-wrap:wrap}
+.brand{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:.06em;color:var(--hero-ink)}
+.brand a{color:var(--hero-muted)} .brand a:hover{color:var(--hero-ink);text-decoration:none}
+.brand .sep{color:var(--hero-muted);margin:0 .4rem}
+.topnav{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.92rem}
+.topnav a{color:var(--hero-muted)} .topnav a:hover{color:var(--hero-ink);text-decoration:none}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:2.5rem;align-items:center;padding:3.5rem 0 5rem;position:relative;z-index:2}
+.eyebrow{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#f0a07c;border:1px solid rgba(240,160,124,.35);padding:.3rem .7rem;border-radius:999px}
+.hero h1{font-size:clamp(2.6rem,6.4vw,4.6rem);margin:1.2rem 0 1rem;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,#f0794a,#ffc29f 45%,#5fb6d1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{font-size:1.18rem;color:#c9d1da;max-width:38rem}
+.cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.6rem}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.75rem 1.15rem;border-radius:10px;font-weight:600;font-size:.98rem;border:1px solid transparent;transition:transform .15s,box-shadow .15s,background .15s}
+.btn:hover{text-decoration:none;transform:translateY(-1px)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 6px 20px rgba(212,84,31,.35)}
+.btn.ghost{border-color:rgba(255,255,255,.22);color:var(--hero-ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.06)}
+.light .btn.ghost{border-color:var(--line);color:var(--ink)}
+.light .btn.ghost:hover{background:var(--line-2)}
+
+/* hero diagram */
+.podviz{position:relative;aspect-ratio:1/1;max-width:430px;margin-left:auto;width:100%}
+.podviz svg{width:100%;height:100%;overflow:visible}
+.podviz .ring{fill:none;stroke:rgba(95,182,209,.25);stroke-dasharray:4 8;animation:spin 60s linear infinite;transform-origin:200px 200px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.podviz .core{fill:url(#coreg)}
+.podviz .link{stroke-width:2.2;fill:none;stroke-dasharray:6 6;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.podviz .l-ok{stroke:#4cc38a}.podviz .l-ask{stroke:#e5b04a}.podviz .l-no{stroke:#f07368;stroke-dasharray:2 10;opacity:.6;animation:none}
+.podviz .node{fill:#1d242c;stroke:rgba(255,255,255,.18)}
+.podviz text{font-family:"Public Sans",sans-serif;fill:#dfe6ee;font-size:12.5px;text-anchor:middle}
+.podviz .tag{font-family:"JetBrains Mono",monospace;font-size:10px;fill:#9aa4b0}
+.podviz .pulse{fill:none;stroke:#5fb6d1;animation:pulse 3s ease-out infinite;transform-origin:200px 200px}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+
+/* sections */
+section{padding:5rem 0;border-bottom:1px solid var(--line-2)}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;display:block}
+.lede{font-size:1.15rem;color:var(--ink-2);max-width:46rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid2>*,.vgrid>*,.apps>*,.ba>*{min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.4rem 1.4rem 1.2rem;box-shadow:var(--shadow)}
+.card h3{margin-bottom:.4rem}
+.card p{color:var(--ink-2);margin:.4rem 0 0;font-size:.98rem}
+.ico{font-size:1.7rem;line-height:1;margin-bottom:.7rem;display:block}
+
+/* questions */
+.questions{background:var(--surface)}
+.qlist{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2rem}
+.q{border-left:4px solid var(--accent);padding:.9rem 1.1rem;background:var(--paper);border-radius:0 10px 10px 0;font-family:"Bricolage Grotesque",sans-serif;font-size:1.22rem;font-weight:600;line-height:1.3}
+.q small{display:block;font-family:"Public Sans",sans-serif;font-size:.92rem;font-weight:400;color:var(--muted);margin-top:.35rem}
+
+/* before / after */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.2rem}
+.ba .panel{border-radius:var(--radius);padding:1.4rem;border:1px solid var(--line);background:var(--surface)}
+.ba .panel h3{display:flex;align-items:center;gap:.5rem}
+.ba svg{width:100%;height:auto;margin-top:1rem}
+.ba .bad h3{color:var(--no)} .ba .good h3{color:var(--ok)}
+.ba ul{margin:.8rem 0 0;padding-left:1.1rem;color:var(--ink-2)}
+.ba li{margin:.25rem 0}
+.svgt{font-family:"Public Sans",sans-serif;font-size:12px;fill:var(--ink-2);text-anchor:middle}
+.svgt.b{font-weight:600;fill:var(--ink)}
+
+/* faq */
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem;margin:.7rem 0}
+summary{cursor:pointer;font-weight:600;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--accent);font-weight:800;font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"\2212"}
+details p{color:var(--ink-2);margin:.7rem 0 .2rem}
+
+/* guardian */
+.guardian{background:var(--hero-bg);color:var(--hero-ink);border-bottom:0}
+.guardian .kicker{color:#f0a07c}
+.guardian .lede{color:#c9d1da}
+.videobox{margin-top:2rem;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.5);background:#000}
+.decisions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+.dec{border-radius:14px;padding:1.2rem;background:#171c23;border:1px solid #252d37}
+.dec .pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.08em;padding:.22rem .55rem;border-radius:999px;font-weight:500}
+.dec.ok .pill{background:#10261b;color:#4cc38a}.dec.ask .pill{background:#2a2110;color:#e5b04a}.dec.no .pill{background:#2c1513;color:#f07368}
+.dec h3{margin:.7rem 0 .3rem;font-size:1.15rem}
+.dec p{color:#b9c4d0;font-size:.95rem;margin:.3rem 0}
+.dec .why{font-size:.86rem;color:#8d99a6;border-top:1px solid #252d37;padding-top:.6rem;margin-top:.8rem}
+.code{background:#0b0e12;color:#d6dee8;border:1px solid #252d37;border-radius:12px;padding:1rem 1.1rem;overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:.82rem;line-height:1.55}
+.code .k{color:#5fb6d1}.code .s{color:#ffc29f}.code .c{color:#6b7785}.code .g{color:#4cc38a}.code .r{color:#f07368}.code .y{color:#e5b04a}
+.light .code{background:#14171c}
+.nodecide{display:flex;gap:1rem;align-items:flex-start;background:rgba(95,182,209,.08);border:1px solid rgba(95,182,209,.25);border-radius:12px;padding:1rem 1.2rem;margin-top:1.4rem;color:#c9d1da}
+.nodecide b{color:#fff}
+
+/* leash steps */
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+.step{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem 1.2rem 1.1rem 1.2rem}
+.step::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-family:"JetBrains Mono",monospace;color:var(--accent);font-size:.85rem;font-weight:500;display:block;margin-bottom:.4rem}
+.step p{color:var(--ink-2);font-size:.95rem;margin:.35rem 0 0}
+.chain{display:flex;gap:.5rem;align-items:center;margin-top:2rem;overflow-x:auto;padding-bottom:.5rem}
+.blk{flex:0 0 auto;font-family:"JetBrains Mono",monospace;font-size:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.6rem .75rem;min-width:9.5rem}
+.blk b{display:block;font-family:"Public Sans",sans-serif;font-size:.85rem;color:var(--ink);margin-bottom:.15rem}
+.blk span{color:var(--muted)}
+.blk.bad{border-color:var(--no);background:var(--no-soft)}
+.arrow{color:var(--muted);flex:0 0 auto}
+
+/* use cases */
+.uc{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem}
+.uc .card{display:flex;flex-direction:column}
+.badge{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:6px;margin-bottom:.8rem}
+.badge.live{background:var(--ok-soft);color:var(--ok)}
+.badge.design{background:var(--teal-soft);color:var(--teal)}
+.badge.vision{background:var(--accent-soft);color:var(--accent)}
+
+/* apps */
+.apps{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+.app{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.app .shot{aspect-ratio:16/10;overflow:hidden;background:var(--line-2);border-bottom:1px solid var(--line)}
+.app .shot img{width:100%;height:100%;object-fit:cover;object-position:top left;transition:transform .5s}
+.app:hover .shot img{transform:scale(1.03)}
+.app .body{padding:1.2rem 1.3rem 1.3rem}
+.app .body p{color:var(--ink-2);font-size:.97rem;margin:.4rem 0 0}
+.app .meta{font-family:"JetBrains Mono",monospace;font-size:.76rem;color:var(--ok);margin-top:.8rem}
+
+/* architecture */
+.stack{display:grid;gap:.6rem;margin-top:2rem}
+.layer{display:grid;grid-template-columns:12rem 1fr;gap:1rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.1rem}
+.layer .ln{font-family:"Bricolage Grotesque",sans-serif;font-weight:800}
+.layer .lc{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{font-size:.84rem;padding:.25rem .6rem;border-radius:999px;background:var(--line-2);color:var(--ink-2);border:1px solid var(--line)}
+.chip.hl{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:600}
+.chip.tl{background:var(--teal-soft);color:var(--teal);border-color:transparent;font-weight:600}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}
+.fact{border-top:3px solid var(--teal);padding-top:.8rem}
+.fact b{font-family:"Bricolage Grotesque",sans-serif;font-size:1.6rem;display:block}
+.fact span{color:var(--ink-2);font-size:.92rem}
+
+/* vision */
+.vision{background:linear-gradient(180deg,var(--paper),var(--teal-soft))}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.6rem;box-shadow:var(--shadow)}
+.vcard h3{font-size:1.5rem;margin:.2rem 0 .6rem}
+.vcard p{color:var(--ink-2)}
+.split{display:grid;grid-template-columns:1fr auto 1fr;gap:.6rem;align-items:center;margin:1.2rem 0}
+.split .box{border-radius:12px;padding:.8rem;text-align:center;font-size:.9rem;border:1px dashed var(--line)}
+.split .box b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:1rem}
+.split .rent{background:var(--line-2)} .split .own{background:var(--ok-soft);border-color:var(--ok);border-style:solid}
+.split .mid{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--muted);text-align:center}
+.vcard .honest{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:.8rem;margin-top:1rem}
+
+/* run */
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem}
+.path{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column}
+.path.featured{border:2px solid var(--accent)}
+.path h3{font-size:1.35rem}
+.path .tagline{color:var(--muted);font-size:.9rem;margin:.2rem 0 .8rem}
+.path ul{padding-left:1.1rem;color:var(--ink-2);font-size:.95rem;margin:.4rem 0 1rem;flex:1}
+.path .btn{align-self:flex-start}
+
+/* status */
+table{width:100%;border-collapse:collapse;margin-top:1.6rem;font-size:.95rem;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+th,td{padding:.7rem .9rem;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-family:"Bricolage Grotesque",sans-serif;background:var(--line-2)}
+.st{font-family:"JetBrains Mono",monospace;font-size:.76rem;padding:.15rem .45rem;border-radius:6px;white-space:nowrap}
+.st.w{background:var(--ok-soft);color:var(--ok)} .st.d{background:var(--teal-soft);color:var(--teal)} .st.p{background:var(--accent-soft);color:var(--accent)}
+.tablewrap{overflow-x:auto}
+
+/* ecosystem */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}
+.pcard{display:flex;flex-direction:column;gap:.25rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;color:var(--ink);transition:border-color .2s,transform .2s}
+.pcard:hover{text-decoration:none;border-color:var(--accent);transform:translateY(-2px)}
+.pname{font-weight:700;font-family:"Bricolage Grotesque",sans-serif;font-size:1.05rem}
+.pblurb{color:var(--ink-2);font-size:.9rem}
+.phost{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--muted);margin-top:auto;padding-top:.4rem}
+
+footer{padding:3rem 0 4rem;color:var(--muted);font-size:.92rem}
+footer .fmain{color:var(--ink-2)}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;padding:2rem 0 3.5rem}
+  .podviz{margin:0 auto;max-width:340px}
+  .grid3,.decisions,.steps,.uc,.paths{grid-template-columns:1fr 1fr}
+  .facts,.pgrid{grid-template-columns:1fr 1fr}
+  .vgrid,.apps,.ba,.grid2{grid-template-columns:1fr}
+  .layer{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  section{padding:3.5rem 0}
+  .grid3,.decisions,.steps,.uc,.paths,.qlist{grid-template-columns:1fr}
+  .topnav{display:none}
+  .split{grid-template-columns:1fr}
+  .split .mid{padding:.2rem 0}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <div class="topbar">
+      <span class="brand"><a href="https://skworld.io/">&#128039; SKWORLD</a><span class="sep">/</span>&#128737;&#65039; SKPODS</span>
+      <nav class="topnav" aria-label="Sections">
+        <a href="#what">What is a pod?</a>
+        <a href="#guardian">The Guardian</a>
+        <a href="#use-cases">Use cases</a>
+        <a href="#architecture">How it works</a>
+        <a href="#run">Get a pod</a>
+        <a href="docs.html">Docs</a>
+        <a href="https://github.com/smilinTux/skpods">GitHub &#8599;</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Solid pods, done right &middot; part of SKWorld</span>
+        <h1>Your data gets a home.<br><em>Your AI gets a leash.</em></h1>
+        <p class="sub">SKPods gives every person a Solid pod: one place on the web where their data lives, owned by them. Apps ask before they read. An AI guardian answers for you, under your rules, and every yes comes with an expiry date.</p>
+        <div class="cta">
+          <a class="btn primary" href="#guardian">&#9654; Watch the Guardian decide</a>
+          <a class="btn ghost" href="#what">Wait, what is a pod?</a>
+          <a class="btn ghost" href="#run">Run your own</a>
+        </div>
+      </div>
+      <div class="podviz" aria-hidden="true">
+        <svg viewBox="0 0 400 400">
+          <defs>
+            <radialGradient id="coreg" cx="50%" cy="40%" r="60%">
+              <stop offset="0" stop-color="#5fb6d1"/><stop offset=".55" stop-color="#12657f"/><stop offset="1" stop-color="#0b2f3b"/>
+            </radialGradient>
+          </defs>
+          <circle class="ring" cx="200" cy="200" r="165"/>
+          <circle class="pulse" cx="200" cy="200" r="70"/>
+          <path class="link l-ok" d="M200 200 L70 95"/>
+          <path class="link l-ok" d="M200 200 L330 95"/>
+          <path class="link l-ask" d="M200 200 L340 300"/>
+          <path class="link l-no" d="M200 200 L60 305"/>
+          <path class="link l-ok" d="M200 200 L200 30"/>
+          <circle class="core" cx="200" cy="200" r="62"/>
+          <text x="200" y="196" style="font-size:15px;font-weight:700;fill:#fff">your pod</text>
+          <text x="200" y="214" class="tag" style="fill:#cfe9f2">you own it</text>
+          <g><circle class="node" cx="200" cy="30" r="26"/><text x="200" y="35">&#129302;</text><text x="200" y="72" class="tag">guardian</text></g>
+          <g><circle class="node" cx="70" cy="95" r="30"/><text x="70" y="100">&#127973;</text><text x="70" y="140" class="tag">clinic &middot; 72h</text></g>
+          <g><circle class="node" cx="330" cy="95" r="30"/><text x="330" y="100">&#129534;</text><text x="330" y="140" class="tag">receipts &middot; append</text></g>
+          <g><circle class="node" cx="340" cy="300" r="30"/><text x="340" y="305">&#128179;</text><text x="340" y="346" class="tag">insurer &middot; ask you</text></g>
+          <g><circle class="node" cx="60" cy="305" r="30" style="opacity:.55"/><text x="60" y="310" style="opacity:.55">&#128683;</text><text x="60" y="351" class="tag">SSN &middot; denied</text></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="questions" id="questions">
+  <div class="inner">
+    <span class="kicker">Start with four questions</span>
+    <h2>Quick: where is your data right now?</h2>
+    <div class="qlist">
+      <div class="q">How many companies have a copy of your date of birth?<small>Every one of them is a breach waiting to happen, and none of them asked how long they could keep it.</small></div>
+      <div class="q">When did you last take back access you gave an app?<small>Could you, if you wanted to? Where would you even click?</small></div>
+      <div class="q">If you switch apps tomorrow, what happens to your history?<small>Your receipts, your chats, your health notes. Usually: they stay behind.</small></div>
+      <div class="q">Your AI assistant can book a doctor. What stops it handing over your SSN?<small>Today, mostly hope. We think it should be rules you wrote, a time limit, and a receipt.</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="inner">
+    <span class="kicker">What is a pod?</span>
+    <h2>A home for your data, on the web, that you own.</h2>
+    <p class="lede">The web was built so anyone could publish. Then data moved into a few giant databases, and every app kept its own copy of you. <a href="https://solidproject.org/">Solid</a>, started by Sir Tim Berners-Lee (who invented the web), flips that around. You get a <b>pod</b>: a personal data store with a web address. Apps stop hoarding your data. They come to your pod, ask for exactly what they need, and you can say no, or say yes until Friday.</p>
+
+    <div class="ba">
+      <div class="panel bad">
+        <h3>&#10060; Today: you are scattered</h3>
+        <svg viewBox="0 0 360 170" role="img" aria-label="Your data copied into many company databases">
+          <g fill="none" stroke="currentColor" style="color:var(--no)" stroke-width="1.5" stroke-dasharray="4 4">
+            <path d="M180 85 L50 35"/><path d="M180 85 L310 35"/><path d="M180 85 L50 140"/><path d="M180 85 L310 140"/><path d="M180 85 L180 20"/><path d="M180 85 L180 155"/>
+          </g>
+          <circle cx="180" cy="85" r="24" fill="var(--no-soft)" stroke="var(--no)"/><text x="180" y="90" class="svgt b">you</text>
+          <g>
+            <rect x="6" y="20" width="88" height="30" rx="7" fill="var(--surface)" stroke="var(--line)"/><text x="50" y="40" class="svgt">clinic DB</text>
+            <rect x="266" y="20" width="88" height="30" rx="7" fill="var(--surface)" stroke="var(--line)"/><text x="310" y="40" class="svgt">store DB</text>
+            <rect x="6" y="125" width="88" height="30" rx="7" fill="var(--surface)" stroke="var(--line)"/><text x="50" y="145" class="svgt">insurer DB</text>
+            <rect x="266" y="125" width="88" height="30" rx="7" fill="var(--surface)" stroke="var(--line)"/><text x="310" y="145" class="svgt">chat app DB</text>
+            <rect x="142" y="2" width="76" height="26" rx="7" fill="var(--surface)" stroke="var(--line)"/><text x="180" y="20" class="svgt">school DB</text>
+            <rect x="142" y="142" width="76" height="26" rx="7" fill="var(--surface)" stroke="var(--line)"/><text x="180" y="160" class="svgt">AI vendor</text>
+          </g>
+        </svg>
+        <ul>
+          <li>Six copies of you, six breach risks, six privacy policies.</li>
+          <li>Consent is a checkbox you clicked once, forever.</li>
+          <li>Leave an app and your history stays behind.</li>
+        </ul>
+      </div>
+      <div class="panel good">
+        <h3>&#9989; With a pod: one home, many guests</h3>
+        <svg viewBox="0 0 360 170" role="img" aria-label="Apps visiting one pod you own, with permission">
+          <g fill="none" stroke-width="1.8">
+            <path d="M180 85 L54 35" stroke="var(--ok)"/><path d="M180 85 L306 35" stroke="var(--ok)"/><path d="M180 85 L54 140" stroke="var(--ask)" stroke-dasharray="5 4"/><path d="M180 85 L306 140" stroke="var(--ok)"/>
+          </g>
+          <circle cx="180" cy="85" r="40" fill="var(--teal)"/><text x="180" y="83" class="svgt b" style="fill:#fff">your pod</text><text x="180" y="98" class="svgt" style="fill:#d9eef5;font-size:9.5px">your keys</text>
+          <rect x="4" y="20" width="100" height="30" rx="7" fill="var(--surface)" stroke="var(--ok)"/><text x="54" y="40" class="svgt">clinic: 72h</text>
+          <rect x="256" y="20" width="100" height="30" rx="7" fill="var(--surface)" stroke="var(--ok)"/><text x="306" y="40" class="svgt">store: drop-off</text>
+          <rect x="4" y="125" width="100" height="30" rx="7" fill="var(--surface)" stroke="var(--ask)"/><text x="54" y="145" class="svgt">insurer: asks</text>
+          <rect x="256" y="125" width="100" height="30" rx="7" fill="var(--surface)" stroke="var(--ok)"/><text x="306" y="145" class="svgt">chat: your msgs</text>
+        </svg>
+        <ul>
+          <li>One copy, in a place you control. Apps get access, not ownership.</li>
+          <li>Every permission is visible, has an end date, and can be taken back.</li>
+          <li>Switch apps and your data does not move. The new app just asks.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin-top:2rem">
+      <div class="card"><span class="ico">&#127968;</span><h3>A pod is storage</h3><p>A small web server for your stuff: files and structured data (your allergies, your receipts, your contacts) in open formats any app can read.</p></div>
+      <div class="card"><span class="ico">&#129706;</span><h3>A WebID is you</h3><p>One web address that is your identity. You log in to apps with it, the same way everywhere, and no single company owns your login.</p></div>
+      <div class="card"><span class="ico">&#128273;</span><h3>Access is yours to give</h3><p>Every folder has a permission list. You decide who reads, who writes, who can only drop things off. Take it back and the door closes.</p></div>
+    </div>
+
+    <div style="margin-top:2.5rem;max-width:52rem">
+      <h3 style="margin-bottom:.6rem">The questions everyone asks</h3>
+      <details><summary>Is this a cloud drive like Dropbox?</summary><p>No. A drive stores files for you to open. A pod stores data that apps can understand and use with your permission. A clinic app can read just your allergy list, for 72 hours, without seeing anything else in your pod.</p></details>
+      <details><summary>Is it a blockchain or crypto thing?</summary><p>No tokens, no chain, no wallet. Pods use ordinary web standards (HTTP, OpenID Connect, linked data), the same plumbing the rest of the web runs on. Our audit log uses hash chaining so tampering shows, which is just good bookkeeping.</p></details>
+      <details><summary>Where does my pod actually live?</summary><p>Wherever you choose: on a server you run, with a provider you trust, or with us. Because Solid is an open standard, you can move your pod and every app keeps working. That is the point.</p></details>
+      <details><summary>What stops an app from copying my data once it has read it?</summary><p>Honestly: nothing technical, once data has left your pod. What pods change is everything before that. Apps get only what you allow, only for as long as you allow, and there is a record of who read what and when. Businesses get a reason to stop keeping copies at all: they can read it from your pod next time.</p></details>
+      <details><summary>Why have pods not taken off yet?</summary><p>Because most pod apps were hard to use and broke at login. The idea was right and the experience was not. That is the part we are fixing: apps that feel like apps, a guardian that handles the asking, and hosting that you can set up in an afternoon.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="inner">
+    <span class="kicker">Why you would want one</span>
+    <h2>Six things that change when you own the data</h2>
+    <div class="grid3" style="margin-top:2rem">
+      <div class="card"><span class="ico">&#128260;</span><h3>Switch apps, keep your life</h3><p>Your receipts, chats and records stay in your pod. Try a new app without starting over, and drop an old one without losing anything.</p></div>
+      <div class="card"><span class="ico">&#128064;</span><h3>See who has what</h3><p>One screen shows every app and business with access to your data, what they can see, and when it ends.</p></div>
+      <div class="card"><span class="ico">&#9203;</span><h3>Yes, until Friday</h3><p>Permissions expire on their own. "24 hours", "until the appointment ends". No more forever checkboxes.</p></div>
+      <div class="card"><span class="ico">&#128106;</span><h3>Care for the people you love</h3><p>Manage a child's pod until they are grown, or help an aging parent decide who sees their care log, as a named delegate.</p></div>
+      <div class="card"><span class="ico">&#129302;</span><h3>AI that works for you</h3><p>Your agent acts on your behalf, under rules stored in your pod, not the platform's. It has a leash, and you hold it.</p></div>
+      <div class="card"><span class="ico">&#127970;</span><h3>Businesses hold less risk</h3><p>A clinic that reads intake data from your pod, instead of storing it, has less to leak, less to secure and less to explain.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="guardian" id="guardian">
+  <div class="inner">
+    <span class="kicker">The flagship: Guardian</span>
+    <h2>An AI agent with a leash.</h2>
+    <p class="lede">Bayview Family Clinic needs Alice's details before her check-up: date of birth, allergies, current medications, insurance member ID, and her Social Security number. Alice is busy. Her guardian agent answers, item by item, under the policy Alice wrote and keeps in her own pod. Watch it happen.</p>
+
+    <div class="videobox">
+      <video controls preload="metadata" playsinline poster="assets/guardian-03-approval-card.png" aria-label="Guardian presenter mode: the clinic asks, the guardian decides, Alice approves, revokes and verifies the audit chain">
+        <source src="assets/guardian-demo.webm" type="video/webm">
+        Your browser cannot play this video. <a href="assets/guardian-demo.webm">Download it</a>.
+      </video>
+    </div>
+
+    <div class="decisions">
+      <div class="dec ok">
+        <span class="pill">AUTO APPROVE &middot; 72h</span>
+        <h3>Date of birth, allergies, medications</h3>
+        <p>Bayview is in Alice's providers list and there is a confirmed booking. Basic health intake is fine, for 72 hours, then it switches off by itself.</p>
+        <p class="why">rule: basic-health-booked-provider</p>
+      </div>
+      <div class="dec ask">
+        <span class="pill">ASK ALICE</span>
+        <h3>Insurance member ID</h3>
+        <p>Money touches this one, so it goes to Alice's phone with the agent's recommendation: "approve for 24 hours, it is a known provider with a booking". One tap.</p>
+        <p class="why">rule: insurance-ask-owner</p>
+      </div>
+      <div class="dec no">
+        <span class="pill">DENY + COUNTER OFFER</span>
+        <h3>Social Security number</h3>
+        <p>Never shared. The clinic gets a plain explanation and a counter offer: "use the insurance member ID instead". Nobody is left stuck.</p>
+        <p class="why">rule: never-share-ssn</p>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:2rem;align-items:start">
+      <div>
+        <h3 style="margin-bottom:.6rem">The rules are data, in your pod</h3>
+        <p style="color:#c9d1da">The guardian's policy is a JSON-LD document stored in the owner's pod. First match wins, no match means "ask the owner", and nothing outside the containers you delegated can ever be granted.</p>
+<pre class="code"><span class="c">// skpods/v1/consents/policy.jsonld (shortened)</span>
+{ <span class="k">"@type"</span>: <span class="s">"GuardianPolicy"</span>, <span class="k">"ceiling"</span>: <span class="s">"30d"</span>,
+  <span class="k">"rules"</span>: [
+    { <span class="k">"id"</span>: <span class="s">"never-share-ssn"</span>, <span class="k">"dataClasses"</span>: [<span class="s">"ssn"</span>],
+      <span class="k">"action"</span>: <span class="r">"deny"</span>,
+      <span class="k">"counterOffer"</span>: { <span class="k">"dataClass"</span>: <span class="s">"insurance_member_id"</span> } },
+    { <span class="k">"id"</span>: <span class="s">"basic-health-booked-provider"</span>,
+      <span class="k">"dataClasses"</span>: [<span class="s">"dob"</span>, <span class="s">"allergies"</span>, <span class="s">"medications"</span>],
+      <span class="k">"when"</span>: { <span class="k">"requesterInProviders"</span>: true, <span class="k">"hasBooking"</span>: true },
+      <span class="k">"action"</span>: <span class="g">"approve"</span>, <span class="k">"maxDuration"</span>: <span class="s">"72h"</span> },
+    { <span class="k">"id"</span>: <span class="s">"insurance-ask-owner"</span>,
+      <span class="k">"dataClasses"</span>: [<span class="s">"insurance_member_id"</span>],
+      <span class="k">"action"</span>: <span class="y">"ask_owner"</span>,
+      <span class="k">"recommend"</span>: { <span class="k">"action"</span>: <span class="s">"approve"</span>, <span class="k">"duration"</span>: <span class="s">"24h"</span> } } ] }</pre>
+      </div>
+      <div>
+        <img src="assets/guardian-03-approval-card.png" alt="Alice's phone shows the insurance request with the guardian's recommendation and reasoning" loading="lazy" style="border-radius:14px;border:1px solid #252d37">
+        <div class="nodecide"><span style="font-size:1.4rem">&#9878;&#65039;</span><div><b>The language model never decides.</b> Decisions come from deterministic rules you can read. An optional LLM, on any OpenAI-compatible endpoint you choose, only rewords a decision that is already made into friendlier language. If it is slow or down, nothing changes but the wording.</div></div>
+      </div>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/smilinTux/skpods/tree/main/showcase/apps/guardian">Guardian source &#8599;</a>
+      <a class="btn ghost" href="https://github.com/smilinTux/skpods/tree/main/showcase/services/sk-consent">sk-consent broker (Rust) &#8599;</a>
+    </div>
+  </div>
+</section>
+
+<section id="leash">
+  <div class="inner">
+    <span class="kicker">How the leash works</span>
+    <h2>Every yes has an end date. Every end is checked.</h2>
+    <p class="lede">The Solid permission system (Web Access Control) answers one question: may this identity do this, here, right now? It has no clock. So we built the part that remembers to take access back: the <b>sk-consent broker</b>, a small Rust service that writes permissions, removes them on time, and proves it did.</p>
+    <div class="steps">
+      <div class="step"><h3>Request</h3><p>A business files a request: which data, why, for how long. The person (or their delegate) sees exactly that.</p></div>
+      <div class="step"><h3>Decide</h3><p>The guardian applies the owner's policy: approve with a cap, ask the owner, or deny with a reason and a counter offer.</p></div>
+      <div class="step"><h3>Grant</h3><p>A read-only permission is written on exactly that resource, for exactly that identity. Never the whole pod, never a group.</p></div>
+      <div class="step"><h3>Expire</h3><p>A sweeper checks every grant each second. Grants are persisted, so a restart still revokes on time.</p></div>
+      <div class="step"><h3>Verify</h3><p>Revoke is checked, not assumed: the broker reads the resource as the grantee and expects a refusal. If it is not refused, it retries.</p></div>
+      <div class="step"><h3>Record</h3><p>Every step lands on a hash-chained audit log, mirrored into the owner's pod, so they can verify it without trusting us.</p></div>
+    </div>
+    <div class="chain" aria-label="Audit chain: each entry contains the hash of the one before it">
+      <div class="blk"><b>request_received</b><span>prev genesis</span></div><span class="arrow">&#8594;</span>
+      <div class="blk"><b>decision &middot; approve</b><span>prev 9c1e&#8230;</span></div><span class="arrow">&#8594;</span>
+      <div class="blk"><b>grant_written</b><span>prev b7d4&#8230;</span></div><span class="arrow">&#8594;</span>
+      <div class="blk"><b>data_read &middot; 200</b><span>prev 41aa&#8230;</span></div><span class="arrow">&#8594;</span>
+      <div class="blk"><b>expiry</b><span>prev 0f3a&#8230;</span></div><span class="arrow">&#8594;</span>
+      <div class="blk"><b>revoke_verified &middot; 403</b><span>prev e21c&#8230;</span></div>
+    </div>
+    <div class="grid2" style="margin-top:1.5rem">
+      <figure style="margin:0"><img src="assets/guardian-06-chain-verified.png" alt="Audit chain verified: every hash matches" loading="lazy" style="border-radius:12px;border:1px solid var(--line)"><figcaption style="color:var(--muted);font-size:.88rem;margin-top:.5rem">Chain verified: every entry matches the one before it.</figcaption></figure>
+      <figure style="margin:0"><img src="assets/guardian-07-chain-tampered.png" alt="Audit chain tampered: the first bad entry is highlighted" loading="lazy" style="border-radius:12px;border:1px solid var(--line)"><figcaption style="color:var(--muted);font-size:.88rem;margin-top:.5rem">Edit one past entry and the chain points at exactly where it broke.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="use-cases">
+  <div class="inner">
+    <span class="kicker">Use cases</span>
+    <h2>What pods do, in real life</h2>
+    <p class="lede">The green ones run today against our dev server with fake data. The blue ones are designed, with the data model and access rules written down. The orange ones are where this goes next.</p>
+    <div class="uc">
+      <div class="card"><span class="badge live">Running demo</span><span class="ico">&#127973;</span><h3>Doctor's intake, without the clipboard</h3><p>The clinic asks, your guardian answers, access ends after the visit. The clinic never stores your SSN because it never gets it.</p></div>
+      <div class="card"><span class="badge live">Running demo</span><span class="ico">&#128117;</span><h3>Grandma's care log, 24 hours</h3><p>A care facility asks to read Grandma's care log. Her daughter, the named delegate, approves for 24 hours. It switches off by itself, and the family sees every read.</p></div>
+      <div class="card"><span class="badge live">Running demo</span><span class="ico">&#129534;</span><h3>Receipts that follow you</h3><p>Stores drop receipts into an append-only inbox in your pod. They can deliver, never read back. Warranty, taxes, expenses: all yours, across every shop.</p></div>
+      <div class="card"><span class="badge live">Running demo</span><span class="ico">&#128172;</span><h3>Chat where you own your words</h3><p>Each person's messages live in their own pod. Leave a group and your messages leave with you, because they were never the app's.</p></div>
+      <div class="card"><span class="badge design">Designed</span><span class="ico">&#127969;</span><h3>The household pod</h3><p>Parents, kids and shared family data (schedules, school forms, medical cards) with group access, and a child's pod that grows up with them.</p></div>
+      <div class="card"><span class="badge design">Designed</span><span class="ico">&#129309;</span><h3>Bridge containers for businesses</h3><p>A shared space per customer and business that holds references, not copies. The business works with you without warehousing you.</p></div>
+      <div class="card"><span class="badge design">Designed</span><span class="ico">&#128105;&#8205;&#9877;&#65039;</span><h3>Staff roles inside a business</h3><p>The practice grants its own staff access by role, and the person's consent still bounds all of it.</p></div>
+      <div class="card"><span class="badge vision">Next</span><span class="ico">&#129504;</span><h3>Your AI's memory, in your pod</h3><p>Your agent's memories live in your pod, not a vendor's cloud. Switch AI providers and your agent still knows you. <a href="#vision">See the vision</a>.</p></div>
+      <div class="card"><span class="badge vision">Next</span><span class="ico">&#128188;</span><h3>A whole office suite on your pod</h3><p>Docs, sheets, calendar, the works, running on rented compute, with every file saved to your pod. <a href="#vision">See the vision</a>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="apps">
+  <div class="inner">
+    <span class="kicker">The showcase</span>
+    <h2>Pod apps that feel like apps</h2>
+    <p class="lede">Most Solid apps are rough, half maintained, and break at login. We built four that are fast, honest about what they do, and pleasant to use, on desktop and phone, in light and dark. Each one logs in with real Solid-OIDC and reads real pod data, with an end-to-end test against the dev server.</p>
+    <div class="apps">
+      <article class="app">
+        <div class="shot"><img src="assets/guardian-04-access-log.png" alt="Guardian: the live access log and grants" loading="lazy"></div>
+        <div class="body"><h3>&#128737;&#65039; Guardian</h3><p>The AI agent with a leash. Presenter mode plays the full clinic story: ask, decide, approve, read, revoke, verify.</p><div class="meta">e2e 15/15 against pods-dev</div></div>
+      </article>
+      <article class="app">
+        <div class="shot"><img src="assets/consent-center-requests-desktop.png" alt="Consent Center: every request for your data" loading="lazy"></div>
+        <div class="body"><h3>&#9989; Consent Center</h3><p>Every request for your data in one place. Approve with an expiry, watch grants count down and switch off, verify the audit chain.</p><div class="meta">e2e 7/7 against pods-dev</div></div>
+      </article>
+      <article class="app">
+        <div class="shot"><img src="assets/receipts-wallet-02-timeline.png" alt="Receipts Wallet: a timeline of receipts in your pod" loading="lazy"></div>
+        <div class="body"><h3>&#129534; Receipts Wallet</h3><p>Businesses deliver to an append-only inbox in your pod. Search, totals, export, and it all comes with you when you switch providers.</p><div class="meta">e2e 6/6 against pods-dev</div></div>
+      </article>
+      <article class="app">
+        <div class="shot"><img src="assets/pod-chat-desktop-family.png" alt="Pod Chat: a family conversation assembled from each person's pod" loading="lazy"></div>
+        <div class="body"><h3>&#128172; Pod Chat</h3><p>A conversation assembled from everyone's pods. Leave the chat and your messages vanish for everyone, because they were always yours.</p><div class="meta">e2e 8/8 against pods-dev</div></div>
+      </article>
+    </div>
+    <div class="cta light">
+      <a class="btn primary" href="https://github.com/smilinTux/skpods/tree/main/showcase">Run the showcase &#8599;</a>
+      <a class="btn ghost" href="https://github.com/smilinTux/skpods/blob/main/showcase/packages/solid-web/ENGINE-NOTES.md">Read our engine notes</a>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="inner">
+    <span class="kicker">How we built it</span>
+    <h2>Plain standards, all the way down</h2>
+    <p class="lede">No proprietary pod API, no lock-in. Apps speak plain Solid over HTTP with DPoP-bound tokens through one small interface (<code>PodStore</code>). The engine underneath can change without any app noticing, and only does so after passing the same conformance gate.</p>
+    <div class="stack">
+      <div class="layer"><div class="ln">Apps</div><div class="lc"><span class="chip hl">Guardian</span><span class="chip hl">Consent Center</span><span class="chip hl">Receipts Wallet</span><span class="chip hl">Pod Chat</span><span class="chip">Your app</span><span class="chip">React + Vite static SPAs</span></div></div>
+      <div class="layer"><div class="ln">Client libraries</div><div class="lc"><span class="chip tl">@skpods/solid-web (TypeScript)</span><span class="chip">sk-solid (Rust)</span><span class="chip">SKPods.Client (.NET)</span><span class="chip">plain HTTP + curl</span></div></div>
+      <div class="layer"><div class="ln">Consent and agents</div><div class="lc"><span class="chip hl">sk-consent broker + guardian (Rust, axum)</span><span class="chip">time-limited grants</span><span class="chip">verified revoke</span><span class="chip">hash-chained audit</span><span class="chip">live events (SSE)</span></div></div>
+      <div class="layer"><div class="ln">Protocols</div><div class="lc"><span class="chip">Solid Protocol</span><span class="chip">Solid-OIDC + PKCE</span><span class="chip">DPoP</span><span class="chip">WebID</span><span class="chip">Web Access Control</span><span class="chip">Type Indexes</span><span class="chip">Turtle / JSON-LD</span></div></div>
+      <div class="layer"><div class="ln">Engine</div><div class="lc"><span class="chip tl">Nextcloud + Solid app (today)</span><span class="chip">Rust engine (planned)</span><span class="chip">one setting: skpods.ENGINE</span><span class="chip">built by our CI, pinned by digest</span></div></div>
+      <div class="layer"><div class="ln">Platform</div><div class="lc"><span class="chip tl">SKStacks Ansible role</span><span class="chip">Docker Swarm</span><span class="chip">Traefik + TLS</span><span class="chip">Postgres + Redis</span><span class="chip">dev / staging / prod playbooks</span></div></div>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>4 + 1</b><span>showcase apps plus a hello-world, all open source</span></div>
+      <div class="fact"><b>36</b><span>end-to-end tests that drive real logins against a live pod server</span></div>
+      <div class="fact"><b>skp:</b><span>an open vocabulary for consent, grants, policy and audit</span></div>
+      <div class="fact"><b>0</b><span>Node servers in production: static apps and one Rust service</span></div>
+    </div>
+    <div class="grid2" style="margin-top:2.5rem">
+      <div class="card">
+        <h3>An open schema for consent</h3>
+        <p>Policies, requests, grants and audit entries are linked data in <code>https://w3id.org/skpods/v1#</code>, reusing schema.org, vCard, FOAF and Solid terms first. Any app, and any other pod provider, can read a person's consents without our software. The path forward is the W3C access request and grant work and ACP, and the model is shaped to move there.</p>
+      </div>
+      <div class="card">
+        <h3>Honest engineering</h3>
+        <p>Every engine behaviour apps must design around is written down with the exact request and response, from missing ETags to how patches apply. We mark every feature as Working, Designed or Planned, and the status table below is the real one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="vision" id="vision">
+  <div class="inner">
+    <span class="kicker">Where this goes</span>
+    <h2>Rent the compute. Own the data.</h2>
+    <p class="lede">Once data lives in pods, an app stops being a place where your data is kept. It becomes compute that visits your data. That split changes what a service provider is.</p>
+    <div class="vgrid">
+      <div class="vcard">
+        <span class="badge vision">Vision</span>
+        <h3>A full office suite, saved to your pod</h3>
+        <p>Picture a Nextcloud with real office tools (documents, spreadsheets, calendar, contacts) where your files are not on that server at all. You log in with your WebID. The server lends you CPU and RAM and the editors. Every save goes straight to your pod. Close your account and nothing is left behind, because nothing was ever kept there.</p>
+        <div class="split">
+          <div class="box rent"><b>Rented</b>editors, CPU, RAM, search index</div>
+          <div class="mid">reads and writes<br>with your permission</div>
+          <div class="box own"><b>Owned</b>your files, in your pod</div>
+        </div>
+        <p class="honest">What it takes: a pod storage backend for Nextcloud's files layer and WebID login. The pod engine needs change detection (ETags) first, which the Rust engine is designed to provide. Calendars and contacts need their own mapping. The server still sees your data while it is working on it, so you choose a provider you trust for compute, and you can switch providers any time.</p>
+      </div>
+      <div class="vcard">
+        <span class="badge vision">Vision</span>
+        <h3>Your AI's memory, in your pod</h3>
+        <p>Your agent's memories, preferences and history live in your pod. Any AI runtime you allow can read them, build its search index on the spot, and throw that index away when it is done. Switch providers and your agent still knows you. Revoke a provider and it forgets you, for real.</p>
+        <div class="split">
+          <div class="box rent"><b>Rented</b>the model, the runtime, a rebuildable index</div>
+          <div class="mid">loads memory<br>under a grant</div>
+          <div class="box own"><b>Owned</b>the memories, in your pod</div>
+        </div>
+        <p class="honest">Why it fits: <a href="https://skmemory.skworld.io/">SKMemory</a> already keeps memories as plain files and treats every search index as derived and rebuildable. Point the files at a pod and the architecture holds. The guardian decides which agent may read which memories, and for how long.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="run">
+  <div class="inner">
+    <span class="kicker">Get a pod</span>
+    <h2>Three ways in</h2>
+    <p class="lede">Pod hosting has a reputation for being fiddly. Ours is one Ansible role with one engine setting, built by our CI and pinned by digest. Deploy it next to the rest of your stack, or let us run it.</p>
+    <div class="paths">
+      <div class="path">
+        <h3>&#128736;&#65039; Self-host</h3>
+        <p class="tagline">Your servers, your pods, free forever</p>
+        <ul>
+          <li>The SKStacks role deploys the whole thing: engine, database, cache, TLS.</li>
+          <li>Dev, staging and prod playbooks; seed and reset for test pods.</li>
+          <li>A verify script checks discovery, login, DPoP and access rules.</li>
+          <li>Apache-2.0, no license key, no phone-home.</li>
+        </ul>
+        <a class="btn primary" href="https://github.com/smilinTux/skstacks/tree/main/v1/ansible/optional/skpods">Deploy guide &#8599;</a>
+      </div>
+      <div class="path featured">
+        <h3>&#9729;&#65039; Hosted SKPods</h3>
+        <p class="tagline">Coming soon: we run it, you own it</p>
+        <ul>
+          <li>A pod at your own WebID, with the Guardian and Consent Center included.</li>
+          <li>Leave any time and take your pod with you: it is plain Solid.</li>
+          <li>For businesses: consent-based data access for your customers, without storing their data.</li>
+        </ul>
+        <a class="btn primary" href="https://github.com/smilinTux/skpods/issues/new?title=Hosted%20SKPods%3A%20count%20me%20in&amp;body=What%20would%20you%20use%20a%20pod%20for%3F">Join the waitlist &#8599;</a>
+      </div>
+      <div class="path">
+        <h3>&#129489;&#8205;&#128187; Build an app</h3>
+        <p class="tagline">Your app, their data, their rules</p>
+        <ul>
+          <li><code>@skpods/solid-web</code>: login, DPoP fetch, PodStore, access helpers.</li>
+          <li>SDK stubs for Rust and .NET, and plain HTTP examples.</li>
+          <li>Copy the Hello Pod app and you are logged in and writing in minutes.</li>
+        </ul>
+        <a class="btn primary" href="docs.html">Read the docs</a>
+      </div>
+    </div>
+<pre class="code" style="margin-top:1.6rem"><span class="c"># self-host: one role, one engine setting (see the SOP for the vault block)</span>
+ansible-playbook -i envs/prod/inventory.ini \
+  framework/v1/ansible/optional/skpods/deploy_skpods-prod.yml
+<span class="c"># then check discovery</span>
+curl -s https://pods.<span class="y">&lt;your-domain&gt;</span>/.well-known/openid-configuration</pre>
+  </div>
+</section>
+
+<section id="status">
+  <div class="inner">
+    <span class="kicker">Honest status</span>
+    <h2>What works, what is next</h2>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Piece</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Pod hosting (Nextcloud engine)</td><td><span class="st w">Working</span></td><td>Dev server live with fake test accounts. Login, DPoP, access rules and agent logins verified on every deploy.</td></tr>
+        <tr><td>Showcase apps (4) and solid-web library</td><td><span class="st w">Working</span></td><td>End-to-end tests against the dev server. Open source in the skpods repo.</td></tr>
+        <tr><td>sk-consent broker and guardian</td><td><span class="st w">Working (demo)</span></td><td>Full clinic story, expiry survives restarts, revoke verified, audit chain verifies. Hardening for production is in progress.</td></tr>
+        <tr><td>Open consent vocabulary (skp:)</td><td><span class="st d">Designed</span></td><td>Terms in use by the apps; publication at w3id.org is next.</td></tr>
+        <tr><td>Production pods and hosted service</td><td><span class="st p">Planned</span></td><td>Join the waitlist to hear first.</td></tr>
+        <tr><td>Rust engine</td><td><span class="st p">Planned</span></td><td>Selected by one setting, only after it passes the same conformance gate.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="ecosystem">
+  <div class="inner">
+    <span class="kicker">Part of SKWorld</span>
+    <h2>Pods are the data layer of an owned stack</h2>
+    <p class="lede">SKPods is one piece of <a href="https://skworld.io/">SKWorld</a>, a sovereign stack from silicon to soul. Take it alone, or with the pieces around it.</p>
+    <div class="pgrid">
+      <a class="pcard" href="https://skworld.io/"><span class="pname">SKWorld</span><span class="pblurb">The whole owned stack, seven layers.</span><span class="phost">skworld.io</span></a>
+      <a class="pcard" href="https://skstacks.skworld.io/"><span class="pname">SKStacks</span><span class="pblurb">The platform that deploys SKPods and everything else.</span><span class="phost">skstacks.skworld.io</span></a>
+      <a class="pcard" href="https://skmemory.skworld.io/"><span class="pname">SKMemory</span><span class="pblurb">Agent memory as plain files, ready to live in a pod.</span><span class="phost">skmemory.skworld.io</span></a>
+      <a class="pcard" href="https://capauth.skworld.io/"><span class="pname">CapAuth</span><span class="pblurb">Identity and signing with keys you hold.</span><span class="phost">capauth.skworld.io</span></a>
+      <a class="pcard" href="https://skhub.skworld.io/"><span class="pname">SKHub</span><span class="pblurb">Your own Nextcloud: files, office, talk.</span><span class="phost">skhub.skworld.io</span></a>
+      <a class="pcard" href="https://skvault.skworld.io/"><span class="pname">SKVault</span><span class="pblurb">Secrets sealed to your identity.</span><span class="phost">skvault.skworld.io</span></a>
+      <a class="pcard" href="https://sksec.skworld.io/"><span class="pname">sksec</span><span class="pblurb">Stops threats at the edge, fail-closed.</span><span class="phost">sksec.skworld.io</span></a>
+      <a class="pcard" href="https://skdata.skworld.io/"><span class="pname">SKData</span><span class="pblurb">Your data, your infrastructure, your rules.</span><span class="phost">skdata.skworld.io</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <p class="fmain">SKPods is built in the open by <a href="https://github.com/smilinTux">smilinTux</a> as part of <a href="https://skworld.io/">SKWorld</a>, on the <a href="https://solidproject.org/">Solid</a> open standards. Fake data only on our dev server: no real person's data is used in any demo.</p>
+    <p><a href="https://github.com/smilinTux/skpods">github.com/smilinTux/skpods</a> &middot; <a href="docs.html">Docs</a> &middot; <a href="https://github.com/smilinTux/skpods/blob/main/SECURITY.md">Security</a> &middot; Apache-2.0</p>
+  </div>
+</footer>
+
+</body>
+</html>

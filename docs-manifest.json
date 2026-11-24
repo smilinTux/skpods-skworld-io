@@ -1,0 +1,37 @@
+{
+  "repo": "smilinTux/skpods",
+  "branch": "main",
+  "path": "docs",
+  "generated": "2026-11-24",
+  "note": "Committed fallback for the /docs viewer when the GitHub Contents API is unavailable or rate-limited. Regenerate from: python docs-manifest-gen.py smilinTux/skpods --out docs-manifest.json",
+  "docs": [
+    {
+      "name": "ACCESS-AND-CONSENT.md",
+      "title": "Access and consent model"
+    },
+    {
+      "name": "ARCHITECTURE.md",
+      "title": "SKPods architecture"
+    },
+    {
+      "name": "COMMUNITY.md",
+      "title": "Staying aligned with the Solid community"
+    },
+    {
+      "name": "CONFORMANCE.md",
+      "title": "Conformance gate"
+    },
+    {
+      "name": "GETTING-STARTED.md",
+      "title": "Getting started on pods-dev (15 minutes)"
+    },
+    {
+      "name": "LOGIN-AND-AUTH.md",
+      "title": "Login and auth on SKPods"
+    },
+    {
+      "name": "TEST-ACCOUNTS.md",
+      "title": "Test accounts on pods-dev"
+    }
+  ]
+}
